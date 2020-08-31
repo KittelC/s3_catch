@@ -11,7 +11,11 @@ The framework and equations are detailed in:
 Kittel, C. M. M., Jiang, L., Tøttrup, C., and Bauer-Gottwein, P.: Sentinel-3 radar altimetry for river monitoring – a catchment-scale evaluation of satellite water surface elevation from Sentinel-3A and Sentinel-3B, Hydrol. Earth Syst. Sci. Discuss., https://hess.copernicus.org/preprints/hess-2020-165/, in review, 2020.
 
 This project contains functionalities including
-
+- crop_raster: extract subsets of larger raster files to speed up processing 
+- s3_subset_ncdf: subset SciHub NetCDF files to speed up processing'
+- s3_preprocessing: Extract all relevant l1b and l2 observations
+- s3_evaluate
+- s3_utils: contains functions used by the other scripts to process the sentinel-3 files
 
 Read model file 
 Extraction of network information, including drainage pattern, catchment and order of stream reaches.
@@ -31,9 +35,14 @@ To follow the full workflow from the HESSD paper, additional processing in e.g. 
 - decimal
 - unittest
 
+- netCDF4
+- geopandas
+- GDAL
+
 
 It is expected that the user has the following shapefiles and rasterfiles:
 - DEM 
+- Water occurrence map
 - Virtual stations shapefile
 
 
