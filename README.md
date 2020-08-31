@@ -13,7 +13,7 @@ Kittel, C. M. M., Jiang, L., Tøttrup, C., and Bauer-Gottwein, P.: Sentinel-3 ra
 This project contains functionalities including
 - crop_raster: extract subsets of larger raster files to speed up processing 
 - s3_subset_ncdf: subset SciHub NetCDF files to speed up processing'
-- s3_preprocessing: Extract all relevant l1b and l2 observations
+- s3_preprocessing: Extract all relevant l1b and l2 observations for virtual stations or individual tracks (floodplain processing)
 - s3_evaluate
 - s3_utils: contains functions used by the other scripts to process the sentinel-3 files
 
