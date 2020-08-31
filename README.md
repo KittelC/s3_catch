@@ -1,8 +1,9 @@
 # s3_catch
+================
 Catchment-scale Sentinel-3 processing
 
 Purpose
-
+================
 This package is a python framework supporting the user in processing Sentinel-3 netcdf files from SARvatore GPOD (https://gpod.eo.esa.int/) and SciHub (https://scihub.copernicus.eu/). 
 The framework and equations are detailed in:
 
@@ -16,18 +17,18 @@ Extraction of network information, including drainage pattern, catchment and ord
 
 
 Dependencies
-
+======================
 To follow the full workflow from the HESSD paper, additional processing in e.g. QGIS might be required. It is recommended to ensure the following dependencies are installed:
 
 
-datetime
-os
-sys
-numpy
-struct
-itertools
-decimal
-unittest
+- datetime
+- os
+- sys
+- numpy
+- struct
+- itertools
+- decimal
+- unittest
 
 
 It is expected that the user has the following shapefiles and rasterfiles:
@@ -37,6 +38,7 @@ It is expected that the user has the following shapefiles and rasterfiles:
 
 
 Getting started
+======================
 
 A test dataset is provided along with the plugin, containing the files required for use, as developed for the HESSD article.
 
