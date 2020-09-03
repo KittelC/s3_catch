@@ -86,7 +86,7 @@ def subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_meas
                                     x = dst[name].setncatts({k: variable.getncattr(k) for k in variable.ncattrs()})
                                     dst[name][:] = src[name][min_index01:max_index01+1]
         else:
-            raise Exception('No Sentinel-3 files in directory.')
+            print('No Sentinel-3 files in directory.')
         
 if __name__ == '__main__':
     
