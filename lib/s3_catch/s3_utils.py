@@ -120,7 +120,7 @@ def outlier_filter(p, nc, wm_folder, selected, dem_filter, lat, lon, sigma0, sig
     (x, y) = p
     
     # Get water mask
-    src_filename = os.path.join(wm_folder, 'JRC' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif')
+    src_filename = os.path.join(wm_folder, 'subset' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif')
     src_ds=gdal.Open(src_filename) 
     rb=src_ds.GetRasterBand(1)
     gt=src_ds.GetGeoTransform() #geotransform
@@ -161,7 +161,7 @@ def wm_outliers(p, nc, wm_folder, selected, dem_filter, lat, lon, sigma0, sigma_
     (x, y) = p
     
     # Get water mask
-    src_filename = os.path.join(wm_folder, 'JRC' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif')
+    src_filename = os.path.join(wm_folder, 'subset' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif')
     src_ds=gdal.Open(src_filename) 
     rb=src_ds.GetRasterBand(1)
     gt=src_ds.GetGeoTransform() #geotransform
@@ -260,6 +260,5 @@ def l1b_filter(vs, selection):
         if np.percentile(vs[p]['PP'], 50) > 0.1:
             countPP.append(p)
     return countSP, countNP, countPP, countMP
-
 
 

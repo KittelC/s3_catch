@@ -85,13 +85,13 @@ def subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_meas
                                     x = dst.createVariable(name, variable.datatype, variable.dimensions)
                                     x = dst[name].setncatts({k: variable.getncattr(k) for k in variable.ncattrs()})
                                     dst[name][:] = src[name][min_index01:max_index01+1]
-        else:
-            print('No Sentinel-3 files in directory.')
+        # else:
+        #     print('No Sentinel-3 files in directory.')
         
 if __name__ == '__main__':
     
-    download_dir = r'../../test/SciHub/Full'
-    dest_dir = r'../../test/SciHub/Subsets'
+    download_dir = r'..\..\..\test\SciHub\Full'
+    dest_dir = os.path.join(download_dir, r'..\Subsets2')
     if not os.path.exists(dest_dir):
         os.mkdir(dest_dir)
         

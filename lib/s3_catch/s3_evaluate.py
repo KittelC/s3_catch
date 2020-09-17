@@ -107,7 +107,3 @@ def sort_l1b(vsd, mostdata, windext, postoltc, ext=None, oltc=None):
         s3_valid_o = []
 
     return s3_valid, s3_valid_3, s3_valid_o
-
-
-
-

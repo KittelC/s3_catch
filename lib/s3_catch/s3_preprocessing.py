@@ -272,7 +272,7 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
     return vs, outliers
 
 
-def create_vs_ts(vs, subset_vs=False, sigma_thresh=30):
+def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
     """
     
 
@@ -315,10 +315,11 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30):
                             vs_d[p]['height_std'][ind] = np.std(vs[p]['height'][filth][day_ind[filt]])
 
                             vs_d[p]['DEM'][ind] = np.mean(vs[p]['DEM_S3'][filth][day_ind[filt]])
-                            vs_d[p]['RIP'][ind] = np.mean(np.array([np.nanmax(vs[p]['RIP'][t])
-                                                    for t in filth[day_ind[filt]]]))
-                            vs_d[p]['height_RIP'][ind] = (vs[p]['height'][filth][day_ind[filt]]
-                                                        [np.argmax(np.array([np.nanmax(vs[p]['RIP'][t])
+                            if source == 'GPOD':
+                                vs_d[p]['RIP'][ind] = np.mean(np.array([np.nanmax(vs[p]['RIP'][t])
+                                                                        for t in filth[day_ind[filt]]]))
+                                vs_d[p]['height_RIP'][ind] = (vs[p]['height'][filth][day_ind[filt]]
+                                                             [np.argmax(np.array([np.nanmax(vs[p]['RIP'][t])
                                                     for t in filth[day_ind[filt]]]))])
                             selected = np.append(selected, filth[day_ind[filt]])
     
@@ -333,8 +334,9 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30):
                         vs_d[p]['lon_asc'][asc_ind] =  vs_d[p]['lon'][ind]
                         vs_d[p]['height_asc'][asc_ind] =  vs_d[p]['height'][ind]
                         vs_d[p]['DEM_asc'][asc_ind] = vs_d[p]['DEM'][ind]
-                        vs_d[p]['RIP_asc'][asc_ind] = vs_d[p]['RIP'][ind]
-                        vs_d[p]['height_RIP_asc'][asc_ind] = vs_d[p]['height_RIP'][ind]
+                        if source == 'GPOD':
+                            vs_d[p]['RIP_asc'][asc_ind] = vs_d[p]['RIP'][ind]
+                            vs_d[p]['height_RIP_asc'][asc_ind] = vs_d[p]['height_RIP'][ind]
                         vs_d[p]['orbit_asc'][asc_ind] = vs_d[p]['orbit'][ind]
             
                     select = vs[p]['TAI'][np.where(vs[p]['sat_path'] == 'descending')[0]]
@@ -344,8 +346,9 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30):
                         vs_d[p]['lon_desc'][desc_ind] =  vs_d[p]['lon'][ind]
                         vs_d[p]['height_desc'][desc_ind] =  vs_d[p]['height'][ind]
                         vs_d[p]['DEM_desc'][desc_ind] = vs_d[p]['DEM'][ind]
-                        vs_d[p]['RIP_desc'][desc_ind] = vs_d[p]['RIP'][ind]
-                        vs_d[p]['height_RIP_desc'][desc_ind] = vs_d[p]['height_RIP'][ind]
+                        if source == 'GPOD':
+                            vs_d[p]['RIP_desc'][desc_ind] = vs_d[p]['RIP'][ind]
+                            vs_d[p]['height_RIP_desc'][desc_ind] = vs_d[p]['height_RIP'][ind]
                         vs_d[p]['orbit_desc'][desc_ind] = vs_d[p]['orbit'][ind]
             
                 for k in vs[p].keys():
@@ -675,4 +678,3 @@ if __name__ == '__main__':
     # vs = read_s3_nc_floodplain(s3a_folder_g3, wm_file, source='GPOD',
     #                           tracks=['070','427','184','541','298'], dem_thresh=30,
     #                           sigma_thresh=30, rip_thresh=1e-13,
-    #                           extent=[26.0, 28.2,-15.9,-15.4])
