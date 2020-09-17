@@ -642,33 +642,33 @@ def write_wse_files(vs, vs_all, selection, vs_to_write=None, folder='Time_Series
 
 if __name__ == '__main__':
     
-    s3a_folder_g2 = r'..\..\test\GPOD_subset\s3a_2bin'
-    s3a_folder_g3 = r'..\..\test\GPOD_subset\s3a_3bin'
-    s3b_folder_g2 = r'..\..\test\GPOD_subset\s3b_2bin'
-    s3b_folder_g3 = r'..\..\test\GPOD_subset\s3b_3bin'
+    s3a_folder_g2 = r'..\..\..\test\GPOD_subset\s3a_2bin'
+    s3a_folder_g3 = r'..\..\..\test\GPOD_subset\s3a_3bin'
+    s3b_folder_g2 = r'..\..\..\test\GPOD_subset\s3b_2bin'
+    s3b_folder_g3 = r'..\..\..\test\GPOD_subset\s3b_3bin'
     
-    s3a_folder_stack = r'..\..\test\GPOD_subset\s3a_stacks'
-    s3a_folder_stackfolder = r'..\..\test\GPOD_subset\s3a_stacks\SARStacks'
+    s3a_folder_stack = r'..\..\..\test\GPOD_subset\s3a_stacks'
+    s3a_folder_stackfolder = r'..\..\..\test\GPOD_subset\s3a_stacks\SARStacks'
 
-    vs_s3a = gpd.read_file(r'..\..\test\Zambezi_VS/S3A_VS_all_w.shp')
-    vs_s3b = gpd.read_file(r'..\..\test\Zambezi_VS/S3B_VS_all_w.shp')
+    vs_s3a = gpd.read_file(r'..\..\..\test\Zambezi_VS/S3A_VS_all_w.shp')
+    vs_s3b = gpd.read_file(r'..\..\..\test\Zambezi_VS/S3B_VS_all_w.shp')
     
-    wm_file = r'..\..\test\occurrence_zambezi_kafue.tif'
+    wm_file = r'..\..\..\test\occurrence_zambezi_kafue.tif'
     
-    wm_folder_S3A = r'..\..\test\New_VS_Nature'
-    wm_folder_S3B = r'..\..\test\New_VS_Nature'
+    wm_folder_S3A = r'..\..\..\test\New_VS_Nature'
+    wm_folder_S3B = r'..\..\..\test\New_VS_Nature'
     s3_folder2 = r'E:\Sentinel_3\L2_WDIR\L2__RESDIR'
     s3_folder1 = r'E:\Sentinel_3\L2_WDIR\L1b_RESDIR\STACK'
 
     s3_folder1 = r'E:\L2_WDIR\L1b_RESDIR\STACK'
     s3_folder2 = r'E:\L2_WDIR'
 
-    # vs_s3a_g, outliers_s3a_g = read_s3_nc(s3a_folder_g3, vs_coords=vs_s3a,
-    #                                       wm_folder=wm_folder_S3A, source='GPOD', 
-    #                                        dem_file=r'..\..\test/merit_egm2008_kafue.tif',
-    #                                        sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
-    #                                        stack=False, stack_folder=s3a_folder_stackfolder)
-    # vs_s3a_g_d = create_vs_ts(vs_s3a_g, subset_vs=False, sigma_thresh=30)
+    vs_s3a_g, outliers_s3a_g = read_s3_nc(s3a_folder_g3, vs_coords=vs_s3a,
+                                          wm_folder=wm_folder_S3A, source='GPOD', 
+                                            dem_file=r'..\..\test/merit_egm2008_kafue.tif',
+                                            sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
+                                            stack=False, stack_folder=s3a_folder_stackfolder)
+    vs_s3a_g_d = create_vs_ts(vs_s3a_g, subset_vs=False, sigma_thresh=30)
     write_wse_files(VSA_d, VSA, s3a_valid_samosa+s3a_valid_samosa_o, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_GPOD_2bin_VS_')
     write_wse_files(VSAE_d, VSAE, s3a_valid_ocog_o+s3a_valid_ocog, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_SciHub_VS_')
 
