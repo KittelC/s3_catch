@@ -118,7 +118,7 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
                         # Get retracked WSE 
                         height = (nc[elev][:].filled() - geoid)[selected]
                         src_ds=gdal.Open(dem_file) 
-                        rb=src_ds.GetRasterBand(1)
+                        rb = src_ds.GetRasterBand(1)
                         gt=src_ds.GetGeoTransform() #geotransform
                         
                         n = len(selected)
@@ -321,9 +321,9 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
                                 vs_d[p]['height_RIP'][ind] = (vs[p]['height'][filth][day_ind[filt]]
                                                              [np.argmax(np.array([np.nanmax(vs[p]['RIP'][t])
                                                     for t in filth[day_ind[filt]]]))])
+                                vs_d[p]['orbit'][ind] = int(vs[p]['orbit'][np.where(vs[p]['TAI'] == uniq_d)][0])
                             selected = np.append(selected, filth[day_ind[filt]])
     
-                    vs_d[p]['orbit'][ind] = int(vs[p]['orbit'][np.where(vs[p]['TAI'] == uniq_d)][0])
         
                 # RETRIEVE DAYS KNOWN TO A CERTAIN orbit
                 if len(np.where(vs[p]['sat_path'] == 'descending')[0]) != len(vs[p]['sat_path']):
@@ -337,7 +337,7 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
                         if source == 'GPOD':
                             vs_d[p]['RIP_asc'][asc_ind] = vs_d[p]['RIP'][ind]
                             vs_d[p]['height_RIP_asc'][asc_ind] = vs_d[p]['height_RIP'][ind]
-                        vs_d[p]['orbit_asc'][asc_ind] = vs_d[p]['orbit'][ind]
+                            vs_d[p]['orbit_asc'][asc_ind] = vs_d[p]['orbit'][ind]
             
                     select = vs[p]['TAI'][np.where(vs[p]['sat_path'] == 'descending')[0]]
                     for desc_ind, uniq_d in enumerate(sorted(list(set(select)))):
@@ -349,13 +349,15 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
                         if source == 'GPOD':
                             vs_d[p]['RIP_desc'][desc_ind] = vs_d[p]['RIP'][ind]
                             vs_d[p]['height_RIP_desc'][desc_ind] = vs_d[p]['height_RIP'][ind]
-                        vs_d[p]['orbit_desc'][desc_ind] = vs_d[p]['orbit'][ind]
+                            vs_d[p]['orbit_desc'][desc_ind] = vs_d[p]['orbit'][ind]
             
                 for k in vs[p].keys():
-                    try:
-                        vs_d[p][k + '_used'] = vs[p][k][selected.astype(int)]
-                    except:
-                        vs_d[p][k + '_used',:] = vs[p][k][selected.astype(int)]
+                    if len(vs[p][k]) > 0: 
+                        print(k)
+                        try:
+                            vs_d[p][k + '_used'] = vs[p][k][selected.astype(int)]
+                        except:
+                            vs_d[p][k + '_used',:] = vs[p][k][selected.astype(int)]
 
     return vs_d
 
@@ -647,6 +649,8 @@ if __name__ == '__main__':
     s3b_folder_g2 = r'..\..\..\test\GPOD_subset\s3b_2bin'
     s3b_folder_g3 = r'..\..\..\test\GPOD_subset\s3b_3bin'
     
+    s3a_folder_s = r'C:\test\SciHub_subset\s3a'
+    
     s3a_folder_stack = r'..\..\..\test\GPOD_subset\s3a_stacks'
     s3a_folder_stackfolder = r'..\..\..\test\GPOD_subset\s3a_stacks\SARStacks'
 
@@ -663,12 +667,14 @@ if __name__ == '__main__':
     s3_folder1 = r'E:\L2_WDIR\L1b_RESDIR\STACK'
     s3_folder2 = r'E:\L2_WDIR'
 
-    vs_s3a_g, outliers_s3a_g = read_s3_nc(s3a_folder_g3, vs_coords=vs_s3a,
-                                          wm_folder=wm_folder_S3A, source='GPOD', 
-                                            dem_file=r'..\..\test/merit_egm2008_kafue.tif',
-                                            sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
-                                            stack=False, stack_folder=s3a_folder_stackfolder)
-    vs_s3a_g_d = create_vs_ts(vs_s3a_g, subset_vs=False, sigma_thresh=30)
+    # vs_s3a_s, outliers_s3a_s = read_s3_nc(s3a_folder_s, vs_coords=vs_s3a,
+    #                                       wm_folder=wm_folder_S3A, source='SciHub', 
+    #                                         dem_file=r'C:\test\merit_egm2008.tif',
+    #                                         sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
+    #                                         stack=False, stack_folder=s3a_folder_stackfolder)
+    
+    
+    vs_s3a_s_d = create_vs_ts(vs_s3a_s, subset_vs=False, sigma_thresh=30, source='SciHub')
     write_wse_files(VSA_d, VSA, s3a_valid_samosa+s3a_valid_samosa_o, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_GPOD_2bin_VS_')
     write_wse_files(VSAE_d, VSAE, s3a_valid_ocog_o+s3a_valid_ocog, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_SciHub_VS_')
 

@@ -162,9 +162,7 @@ def wm_outliers(p, nc, wm_folder, selected, dem_filter, lat, lon, sigma0, sigma_
     # Get water mask coordinates
     wm_coords = [(float(fn.split('_')[1]), float(fn.split('_')[2].split('.tif')[0])) for fn in os.listdir(wm_folder)]
     (x, y) = sorted([(dist(p1, p), p1) for p1 in wm_coords])[0][1]
-    
-    print( glob.glob(os.path.join(wm_folder, '*' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif'))[0])
-    
+        
     src_filename = glob.glob(os.path.join(wm_folder, '*' + '_' + str(np.round(x, 2)) + '_' + str(np.round(y, 2)) + '.tif'))[0]
     src_ds=gdal.Open(src_filename) 
     rb=src_ds.GetRasterBand(1)
