@@ -17,23 +17,11 @@ This project contains functionalities including
 - s3_evaluate
 - s3_utils: contains functions used by the other scripts to process the sentinel-3 files
 
-Read model file 
-Extraction of network information, including drainage pattern, catchment and order of stream reaches.
-
+OBS: It is recommended to use at least version 003 of the Sentinel-3 files.
 
 Dependencies
 ======================
 To follow the full workflow from the HESSD paper, additional processing in e.g. QGIS might be required. It is recommended to ensure the following dependencies are installed:
-
-
-- datetime
-- os
-- sys
-- numpy
-- struct
-- itertools
-- decimal
-- unittest
 
 - netCDF4
 - geopandas

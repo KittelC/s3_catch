@@ -644,28 +644,42 @@ def write_wse_files(vs, vs_all, selection, vs_to_write=None, folder='Time_Series
 
 if __name__ == '__main__':
     
-    s3a_folder_g2 = r'..\..\..\test\GPOD_subset\s3a_2bin'
-    s3a_folder_g3 = r'..\..\..\test\GPOD_subset\s3a_3bin'
-    s3b_folder_g2 = r'..\..\..\test\GPOD_subset\s3b_2bin'
-    s3b_folder_g3 = r'..\..\..\test\GPOD_subset\s3b_3bin'
+    # s3a_folder_g2 = r'..\..\test\GPOD_subset\s3a_2bin'
+    # s3a_folder_g3 = r'..\..\test\GPOD_subset\s3a_3bin'
+    # s3b_folder_g2 = r'..\..\test\GPOD_subset\s3b_2bin'
+    # s3b_folder_g3 = r'..\..\test\GPOD_subset\s3b_3bin'
     
+
     s3a_folder_s = r'C:\test\SciHub_subset\s3a'
     
     s3a_folder_stack = r'..\..\..\test\GPOD_subset\s3a_stacks'
     s3a_folder_stackfolder = r'..\..\..\test\GPOD_subset\s3a_stacks\SARStacks'
 
-    vs_s3a = gpd.read_file(r'..\..\..\test\Zambezi_VS/S3A_VS_all_w.shp')
-    vs_s3b = gpd.read_file(r'..\..\..\test\Zambezi_VS/S3B_VS_all_w.shp')
-    
-    wm_file = r'..\..\..\test\occurrence_zambezi_kafue.tif'
-    
-    wm_folder_S3A = r'..\..\..\test\New_VS_Nature'
-    wm_folder_S3B = r'..\..\..\test\New_VS_Nature'
-    s3_folder2 = r'E:\Sentinel_3\L2_WDIR\L2__RESDIR'
-    s3_folder1 = r'E:\Sentinel_3\L2_WDIR\L1b_RESDIR\STACK'
 
-    s3_folder1 = r'E:\L2_WDIR\L1b_RESDIR\STACK'
-    s3_folder2 = r'E:\L2_WDIR'
+
+    
+    # s3a_folder_stack = r'..\..\test\GPOD_subset\s3a_stacks'
+    s3a_folder_stackfolder = r'..\..\test\GPOD_subset\s3a_stacks\SARStacks'
+
+    # vs_s3a = gpd.read_file(r'..\..\test\Zambezi_VS/S3A_VS_all_w.shp')
+    # vs_s3b = gpd.read_file(r'..\..\test\Zambezi_VS/S3B_VS_all_w.shp')
+
+
+    vs_s3a_Amur = gpd.read_file(r'h:\RACZIW\Amur\S3A_VS_Amur_coord.shp')
+    vs_s3b_Amur = gpd.read_file(r'h:\RACZIW\Amur\S3B_VS_Amur_coord.shp')
+    
+    # wm_file = r'..\..\test\occurrence_zambezi_kafue.tif'
+    
+    # wm_folder_S3A = r'..\..\test\New_VS_Nature'
+    # wm_folder_S3B = r'..\..\test\New_VS_Nature'
+    wm_folder_Amur = r'h:\RACZIW\Amur\GSWE\submasks'
+    
+    # s3_folder2 = r'E:\Sentinel_3\L2_WDIR\L2__RESDIR'
+    # s3_folder1 = r'E:\Sentinel_3\L2_WDIR\L1b_RESDIR\STACK'
+
+    # s3_folder1 = r'E:\L2_WDIR\L1b_RESDIR\STACK'
+    # s3_folder2 = r'E:\L2_WDIR'
+
 
     # vs_s3a_s, outliers_s3a_s = read_s3_nc(s3a_folder_s, vs_coords=vs_s3a,
     #                                       wm_folder=wm_folder_S3A, source='SciHub', 
@@ -681,6 +695,3 @@ if __name__ == '__main__':
     write_wse_files(VSB_d, VSB, s3b_valid_samosa, VS_to_write_B, folder=r'..\..\test\Time_Series', key='Zambezi_S3B_GPOD_2bin_VS_')
     write_wse_files(VSBE_d, VSBE, s3b_valid_ocog, VS_to_write_B, folder=r'..\..\test\Time_Series', key='Zambezi_S3B_SciHub_VS_')
 
-    # vs = read_s3_nc_floodplain(s3a_folder_g3, wm_file, source='GPOD',
-    #                           tracks=['070','427','184','541','298'], dem_thresh=30,
-    #                           sigma_thresh=30, rip_thresh=1e-13,
