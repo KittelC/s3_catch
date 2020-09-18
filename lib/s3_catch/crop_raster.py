@@ -67,15 +67,3 @@ def vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name='water_mask_
     ds = None
 
 
-if __name__ == '__main__':
-    full_raster=r'h:\RACZIW\Amur\GSWE\occurrence_Amur_clip.tif'
-          
-    dest_folder = r'h:\RACZIW\Amur\GSWE\submasks\\'
-    if not os.path.exists(dest_folder):
-        os.mkdir(dest_folder)
-        
-    ulc = (107, 56)
-    lrc = (141, 41)
-    name='water_mask_'
-    
-    vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name=name)

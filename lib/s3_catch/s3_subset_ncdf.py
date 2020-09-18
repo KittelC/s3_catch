@@ -88,13 +88,3 @@ def subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_meas
         # else:
         #     print('No Sentinel-3 files in directory.')
         
-if __name__ == '__main__':
-    
-    download_dir = r'..\..\..\test\SciHub\Full'
-    dest_dir = os.path.join(download_dir, r'..\Subsets2')
-    if not os.path.exists(dest_dir):
-        os.mkdir(dest_dir)
-        
-    extent = [19, -9, 36, -20] #upper left x, upper left y, lower right x, lower right y
-    
-    subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_measurement.nc')

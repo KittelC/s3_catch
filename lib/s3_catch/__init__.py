@@ -7,6 +7,3 @@ Copyright: Cecile M. M. Kittel and Technical University of Denmark
 """
 
 version = '0.0'
-from RiverNetwork import RiverNetwork
-from ModelFile import ModelFile
-import DBF_reader_writer 
