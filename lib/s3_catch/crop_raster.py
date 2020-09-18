@@ -40,8 +40,8 @@ def vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name='water_mask_
     if x1 < x0 or y1 < y0:
         raise ValueError('Study area extent incorrect - please check coordinates.')
     
-    xext = np.arange(x0, x1, 1)
-    yext = np.arange(y0, y1, 1)
+    xext = np.arange(x0, x1, 2*subset_size)
+    yext = np.arange(y0, y1, 2*subset_size)
     
     
     ds = gdal.Open(full_raster)
@@ -68,14 +68,14 @@ def vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name='water_mask_
 
 
 if __name__ == '__main__':
-    full_raster=r'..\..\test\occurrence_zambezi_kafue.tif'
+    full_raster=r'h:\RACZIW\Amur\GSWE\occurrence_Amur_clip.tif'
           
-    dest_folder = r'WM_C2_test//'
+    dest_folder = r'h:\RACZIW\Amur\GSWE\submasks\\'
     if not os.path.exists(dest_folder):
         os.mkdir(dest_folder)
         
-    ulc = (26.0, -15.4)
-    lrc = (28.2, -15.9)
+    ulc = (107, 56)
+    lrc = (141, 41)
     name='water_mask_'
     
     vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name=name)
