@@ -295,6 +295,7 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
         subset_vs = list(vs.keys())
     ## Track average
     for p in vs.keys():
+        print(p)
         if len(vs[p]['height'] > 0):
             if np.any(np.isclose(subset_vs, p, rtol=1e-10)):
                 vs_d[p] = prep_vsd(vs, p)
@@ -322,8 +323,10 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
                                                              [np.argmax(np.array([np.nanmax(vs[p]['RIP'][t])
                                                     for t in filth[day_ind[filt]]]))])
                             selected = np.append(selected, filth[day_ind[filt]])
-    
-                    vs_d[p]['orbit'][ind] = int(vs[p]['orbit'][np.where(vs[p]['TAI'] == uniq_d)][0])
+                            
+                    # print(uniq_d)
+                    uniq_d
+                    # vs_d[p]['orbit'][ind] = int(vs[p]['orbit'][np.where(vs[p]['TAI'] == uniq_d)][0])
         
                 # RETRIEVE DAYS KNOWN TO A CERTAIN orbit
                 if len(np.where(vs[p]['sat_path'] == 'descending')[0]) != len(vs[p]['sat_path']):
@@ -351,11 +354,13 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
                             vs_d[p]['height_RIP_desc'][desc_ind] = vs_d[p]['height_RIP'][ind]
                         vs_d[p]['orbit_desc'][desc_ind] = vs_d[p]['orbit'][ind]
             
-                for k in vs[p].keys():
-                    try:
-                        vs_d[p][k + '_used'] = vs[p][k][selected.astype(int)]
-                    except:
-                        vs_d[p][k + '_used',:] = vs[p][k][selected.astype(int)]
+                # for k in vs[p].keys():
+                #     print(k)
+                #     if not ((k=='misfit') or (k=='orbit')):
+                #         try:
+                #             vs_d[p][k + '_used'] = vs[p][k][selected.astype(int)]
+                #         except:
+                #             vs_d[p][k + '_used',:] = vs[p][k][selected.astype(int)]
 
     return vs_d
 
@@ -671,14 +676,14 @@ if __name__ == '__main__':
     # s3_folder1 = r'E:\L2_WDIR\L1b_RESDIR\STACK'
     # s3_folder2 = r'E:\L2_WDIR'
 
-    vs_s3a_g, outliers_s3a_g = read_s3_nc(s3a_folder_Amur, vs_coords=vs_s3a_Amur,
-                                          wm_folder=wm_folder_Amur, source='SciHub', 
-                                            dem_file=r'h:\RACZIW\Amur\Merit\elv_Amur_clip.tif',
-                                            sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
-                                            stack=False, stack_folder=s3a_folder_stackfolder)
-    vs_s3a_g_d = create_vs_ts(vs_s3a_g, subset_vs=False, sigma_thresh=30)
+    # vs_s3a_g, outliers_s3a_g = read_s3_nc(s3a_folder_Amur, vs_coords=vs_s3a_Amur,
+    #                                       wm_folder=wm_folder_Amur, source='SciHub', 
+    #                                         dem_file=r'h:\RACZIW\Amur\Merit\elv_Amur_clip.tif',
+    #                                         sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
+    #                                         stack=False, stack_folder=s3a_folder_stackfolder)
+    vs_s3a_g_d = create_vs_ts(vs_s3a_g, subset_vs=False, sigma_thresh=30, source = 'SciHub')
     # write_wse_files(VSA_d, VSA, s3a_valid_samosa+s3a_valid_samosa_o, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_GPOD_2bin_VS_')
-    write_wse_files(VSAE_d, VSAE, s3a_valid_ocog_o+s3a_valid_ocog, VS_to_write_A, folder=r'h:\RACZIW\Amur\S3\Time_Series', key='Zambezi_S3A_SciHub_VS_')
+    write_wse_files(vs_s3a_g_d, vs_s3a_g, vs_s3a_g_d, folder=r'h:\RACZIW\Amur\S3\Time_Series', key='Amur_S3A_SciHub_VS_')
 
     # write_wse_files(VSB_d, VSB, s3b_valid_samosa, VS_to_write_B, folder=r'..\..\test\Time_Series', key='Zambezi_S3B_GPOD_2bin_VS_')
     write_wse_files(VSBE_d, VSBE, s3b_valid_ocog, VS_to_write_B, folder=r'h:\RACZIW\Amur\S3\Time_Series', key='Zambezi_S3B_SciHub_VS_')
