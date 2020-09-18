@@ -574,11 +574,13 @@ def read_s3_nc_floodplain(s3_folder, wm_file, source='GPOD',
 
 
 
-def write_wse_files(vs, vs_all, selection, vs_to_write=None, folder='Time_Series', key='Zambezi_S3A_VS_'):
+def write_wse_files(vs, vs_all, selection=None, vs_to_write=None, folder='Time_Series', key='Zambezi_S3A_VS_'):
 
     """
     Write time series files
     """
+    if selection == None:
+        selection = vs.keys()
     if not os.path.exists(folder):
         os.mkdir(folder)
         print('Creating WSE time series folder: '+folder)
@@ -591,7 +593,7 @@ def write_wse_files(vs, vs_all, selection, vs_to_write=None, folder='Time_Series
                 fname = (key+ str(round(vs_all[p]['lon'][0],2))+'_'+
                                                str(round(vs_all[p]['lat'][0], 2))+'.txt')
             with open(os.path.join(folder, fname), 'w') as outfile:
-                if 'pass' in vs[p].keys():
+                if 'pass' in vs_all[p].keys():
                     outfile.writelines("# Lat = " + str(y) + ', ' + 'Lon = ' + str(x) + "\n"+
                         "# Data file format" + "\n"+
                                         "# Source: SciHub" + "\n" +
@@ -613,7 +615,7 @@ def write_wse_files(vs, vs_all, selection, vs_to_write=None, folder='Time_Series
                                                            str(vs[p]['height'][ind]),
                                                            str(np.std(vs_all[p]['height'][day_ind])),
                                                            str(len(vs_all[p]['height'][day_ind])),
-                                                           str(int(vs[p]['pass'][0])).zfill(3)]))
+                                                           str(int(vs_all[p]['pass'][0])).zfill(3)]))
                             outfile.writelines('\n')
     
                 elif 'orbit' in vs[p].keys():
@@ -693,5 +695,5 @@ if __name__ == '__main__':
     write_wse_files(VSAE_d, VSAE, s3a_valid_ocog_o+s3a_valid_ocog, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_SciHub_VS_')
 
     write_wse_files(VSB_d, VSB, s3b_valid_samosa, VS_to_write_B, folder=r'..\..\test\Time_Series', key='Zambezi_S3B_GPOD_2bin_VS_')
-    write_wse_files(VSBE_d, VSBE, s3b_valid_ocog, VS_to_write_B, folder=r'..\..\test\Time_Series', key='Zambezi_S3B_SciHub_VS_')
+    write_wse_files(vs_s3a_s_d, vs_s3a_s, folder=r'C:\test\Time_Series', key='Zambezi_S3B_SciHub_VS_')
 
