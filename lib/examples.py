@@ -96,6 +96,12 @@ if __name__ == '__main__':
     
     
     # Fourth step: Write text files with the observations at each VS
+    # first argument: vs from step 2
+    # second argument: vsd from step 3
+    # optional arguments: 
+        # selection: if only writing subset, list of coordinates (as keys of vs and vsd)
+        # vs_to_write: if using different VS names, use to provide "translation" dictionary
+        # folder and key: where to store and common name suffix
     write_wse_files(VSA_d, VSA, s3a_valid_samosa+s3a_valid_samosa_o, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_GPOD_2bin_VS_')
     write_wse_files(VSAE_d, VSAE, s3a_valid_ocog_o+s3a_valid_ocog, VS_to_write_A, folder=r'..\..\test\Time_Series', key='Zambezi_S3A_SciHub_VS_')
 

@@ -574,26 +574,45 @@ def read_s3_nc_floodplain(s3_folder, wm_file, source='GPOD',
 
 
 
-def write_wse_files(vs, vs_all, selection=None, vs_to_write=None, folder='Time_Series', key='Zambezi_S3A_VS_'):
+def write_wse_files(vsd, vs, selection=None, vs_to_write=None, folder='Time_Series', key='Zambezi_S3A_VS_'):
+    """
+    
+
+    Parameters
+    ----------
+    vsd : dictionary with along-tracked averaged WSE at all VS
+    vs : virtual stations dictionary with all data
+    selection : 
+        List of VS to be processed if a subset - either list of coordinates or 
+        dictionary (and loop will be over the keys)
+    vs_to_write : if the virtual stations have been attributed ID's, use vs_to_write
+    folder : Path (String), optional
+        Location to store VS text files. The default is 'Time_Series'.
+    key : String, optional
+        Naming of files. The default is 'Zambezi_S3A_VS_'.
+
+    Returns
+    -------
+    None.
 
     """
-    Write time series files
-    """
+ 
+
     if selection == None:
-        selection = vs.keys()
+        selection = vsd.keys()
     if not os.path.exists(folder):
         os.mkdir(folder)
         print('Creating WSE time series folder: '+folder)
     for p in selection:
         (x, y) = p
-        if len(vs[p]['height']) > 1:
+        if len(vsd[p]['height']) > 1:
             if vs_to_write:
                 fname = key + vs_to_write[p]['ID']
             else:
-                fname = (key+ str(round(vs_all[p]['lon'][0],2))+'_'+
-                                               str(round(vs_all[p]['lat'][0], 2))+'.txt')
+                fname = (key+ str(round(vs[p]['lon'][0],2))+'_'+
+                                               str(round(vs[p]['lat'][0], 2))+'.txt')
             with open(os.path.join(folder, fname), 'w') as outfile:
-                if 'pass' in vs_all[p].keys():
+                if 'pass' in vs[p].keys():
                     outfile.writelines("# Lat = " + str(y) + ', ' + 'Lon = ' + str(x) + "\n"+
                         "# Data file format" + "\n"+
                                         "# Source: SciHub" + "\n" +
@@ -604,21 +623,21 @@ def write_wse_files(vs, vs_all, selection=None, vs_to_write=None, folder='Time_S
                     "#(5): number of meas. in height"+ "\n"+
                     "#(6): Pass number" + "\n")
             
-                    for ind, uniq_d in enumerate(vs[p]['TAI']):
-                        day_ind = np.where(vs_all[p]['TAI'] == uniq_d)[0]
-                        if not np.isnan(vs[p]['height'][ind]):
-            #                    filth = np.where((VS[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
-            #                                     (VS[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
+                    for ind, uniq_d in enumerate(vsd[p]['TAI']):
+                        day_ind = np.where(vs[p]['TAI'] == uniq_d)[0]
+                        if not np.isnan(vsd[p]['height'][ind]):
+            #                    filth = np.where((vsd[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
+            #                                     (vsd[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
     
                             outfile.writelines((',').join([str(round(year_fraction(uniq_d),8)),
                                                     datetime.strftime(uniq_d,'%Y/%m/%d'),
-                                                           str(vs[p]['height'][ind]),
-                                                           str(np.std(vs_all[p]['height'][day_ind])),
-                                                           str(len(vs_all[p]['height'][day_ind])),
-                                                           str(int(vs_all[p]['pass'][0])).zfill(3)]))
+                                                           str(vsd[p]['height'][ind]),
+                                                           str(np.std(vs[p]['height'][day_ind])),
+                                                           str(len(vs[p]['height'][day_ind])),
+                                                           str(int(vs[p]['pass'][0])).zfill(3)]))
                             outfile.writelines('\n')
     
-                elif 'orbit' in vs[p].keys():
+                elif 'orbit' in vsd[p].keys():
                     outfile.writelines("# Lat = " + str(y) + ', ' + 'Lon = ' + str(x) + "\n"+
                         "# Data file format" + "\n"+
                                        '# Source: GPOD' + "\n" +
@@ -629,18 +648,18 @@ def write_wse_files(vs, vs_all, selection=None, vs_to_write=None, folder='Time_S
                     "#(5): number of meas. in height"+ "\n"+
                     "#(6): Orbit number" + "\n")
             
-                    for ind, uniq_d in enumerate(vs[p]['TAI']):
-                        day_ind = np.where(vs_all[p]['TAI'] == uniq_d)[0]
-                        if not np.isnan(vs[p]['height'][ind]):
-            #                    filth = np.where((VS[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
-            #                                     (VS[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
+                    for ind, uniq_d in enumerate(vsd[p]['TAI']):
+                        day_ind = np.where(vs[p]['TAI'] == uniq_d)[0]
+                        if not np.isnan(vsd[p]['height'][ind]):
+            #                    filth = np.where((vsd[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
+            #                                     (vsd[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
     
                                 outfile.writelines((',').join([str(round(year_fraction(uniq_d),8)),
                                     datetime.strftime(uniq_d,'%Y/%m/%d'),
-                                           str(vs[p]['height'][ind]),
-                                           str(np.std(vs_all[p]['height'][day_ind])),
-                                           str(len(vs_all[p]['height'][day_ind])),
-                                           str(int(vs[p]['orbit'][ind])).zfill(3)]))
+                                           str(vsd[p]['height'][ind]),
+                                           str(np.std(vs[p]['height'][day_ind])),
+                                           str(len(vs[p]['height'][day_ind])),
+                                           str(int(vsd[p]['orbit'][ind])).zfill(3)]))
         
                                 outfile.writelines('\n')
 
