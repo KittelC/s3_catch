@@ -115,7 +115,8 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
                         lat_01 = nc['lat_01'][:].filled()
                         geoid_01 = nc['geoid_01'][:].filled()
                         geoid = np.interp(nc.variables[lat][:].filled(), lat_01, geoid_01)
-                    
+                        if lat_01[0] > lat_01[1]:
+                            geoid = np.flip(geoid) #np.interp sorts to ascending values - if descending, this will have to be corrected.
                         # Get retracked WSE 
                         height = (nc[elev][:].filled() - geoid)[selected]
                         src_ds=gdal.Open(dem_file) 

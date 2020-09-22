@@ -34,7 +34,7 @@ if __name__ == '__main__':
     name='water_mask_'
     
     # Subset raster:
-    # crop_raster.vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name=name)   
+    crop_raster.vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name=name)   
     
     # Second preliminary step (ONLY SCIHUB): 
     # Directory with full netcdf files:
