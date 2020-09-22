@@ -60,10 +60,10 @@ def vs_wm(full_raster, dest_folder, lrc, ulc, subset_size=0.5, name='water_mask_
         
             translateoptions = gdal.TranslateOptions(gdal.ParseCommandLine("-of Gtiff -co COMPRESS=LZW -projwin " + extent))
         
-            dst_filename = dest_folder + 'subset_' + str(np.round(x, 1)) + '_' + str(np.round(y, 1)) + '.tif'
+            dst_filename = os.path.join(dest_folder, 'subset_' + str(np.round(x, 1)) + '_' + str(np.round(y, 1)) + '.tif')
             ds_out = gdal.Translate(dst_filename, ds, options = translateoptions)
             ds_out = None
     
     ds = None
-
+    return
 

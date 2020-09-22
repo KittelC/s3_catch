@@ -7,3 +7,5 @@ Copyright: Cecile M. M. Kittel and Technical University of Denmark
 """
 
 version = '0.0'
+# import s3_catch
+# from s3_catch import s3_utils, s3_preprocessing, s3_evaluate

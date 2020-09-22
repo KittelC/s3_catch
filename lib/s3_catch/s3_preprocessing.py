@@ -14,7 +14,8 @@ import netCDF4
 from osgeo import gdal
 import geopandas as gpd
 
-from s3_utils import create_vs, create_outliers, wm_outliers, outlier_filter, prep_vsd, year_fraction
+import s3_catch.s3_utils as s3_utils
+# from s3_utils import s3_utils.create_vs, s3_utils.create_outliers, s3_utils.wm_outliers, s3_utils.outlier_filter, s3_utils.prep_vsd, s3_utils.year_fraction
 
 
 def read_s3_nc(s3_folder, vs_coords, wm_folder, source, 
@@ -138,15 +139,15 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
                                           (height >= dem - dem_thresh))[0]
                     
                     if len(dem_filter) > 0:
-                        mask = outlier_filter(p, nc, wm_folder, selected, dem_filter, lat, lon, sig0, sigma_thresh, source, rip, rip_thresh)
+                        mask = s3_utils.outlier_filter(p, nc, wm_folder, selected, dem_filter, lat, lon, sig0, sigma_thresh, source, rip, rip_thresh)
                                 
-                    mask_wm = wm_outliers(p, nc, wm_folder, selected, dem_filter, lat, lon, sig0, sigma_thresh, source, rip, rip_thresh)
+                    mask_wm = s3_utils.wm_outliers(p, nc, wm_folder, selected, dem_filter, lat, lon, sig0, sigma_thresh, source, rip, rip_thresh)
                     
                     dem_filter_WM = np.where((height[~np.isnan(mask_wm)] <= dem[~np.isnan(mask_wm)] + dem_thresh) &
                                           (height[~np.isnan(mask_wm)] >= dem[~np.isnan(mask_wm)] - dem_thresh))[0]
 
                     if not p in outliers.keys():
-                        outliers = create_outliers(outliers, p)
+                        outliers = s3_utils.create_outliers(outliers, p)
                         
                     sensing_date = [(datetime(2000,1,1) + timedelta(seconds = c2_time)).date()
                                     for c2_time in nc.variables[tai][selected].filled()][0]
@@ -158,7 +159,7 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
 
                     elif len(dem_filter) > 0:
                         if not p in vs.keys():
-                            vs = create_vs(vs, p)
+                            vs = s3_utils.create_vs(vs, p)
                         if stack and os.path.exists(stack_folder):
                             root = f.split('RES')[1].split('.nc')[0]
                             if not p in filetracker.keys():
@@ -297,7 +298,7 @@ def create_vs_ts(vs, subset_vs=False, sigma_thresh=30, source='GPOD'):
     for p in vs.keys():
         if len(vs[p]['height'] > 0):
             if np.any(np.isclose(subset_vs, p, rtol=1e-10)):
-                vs_d[p] = prep_vsd(vs, p)
+                vs_d[p] = s3_utils.prep_vsd(vs, p)
 
                 # Can be edited to filter out according to time series statistics
                 filth = np.arange(0,len(vs[p]['height']))
@@ -496,7 +497,7 @@ def read_s3_nc_floodplain(s3_folder, wm_file, source='GPOD',
                         p = nc.getncattr(passid)
                        
                         if not p in vs.keys():
-                            vs = create_vs(vs, p)
+                            vs = s3_utils.create_vs(vs, p)
                                     
                         vs[p]['wm'] = np.concatenate([vs[p]['wm'], mask[~np.isnan(mask)]])
                         vs[p]['lat'] = np.concatenate([vs[p]['lat'], nc.variables[lat][selected][dem_filter][~np.isnan(mask)].filled()])
@@ -602,7 +603,7 @@ def write_wse_files(vsd, vs, selection=None, vs_to_write=None, folder='Time_Seri
         selection = vsd.keys()
     if not os.path.exists(folder):
         os.mkdir(folder)
-        print('Creating WSE time series folder: '+folder)
+        print('Creating WSE time series folder: '+ folder)
     for p in selection:
         (x, y) = p
         if len(vsd[p]['height']) > 1:
@@ -629,7 +630,7 @@ def write_wse_files(vsd, vs, selection=None, vs_to_write=None, folder='Time_Seri
             #                    filth = np.where((vsd[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
             #                                     (vsd[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
     
-                            outfile.writelines((',').join([str(round(year_fraction(uniq_d),8)),
+                            outfile.writelines((',').join([str(round(s3_utils.year_fraction(uniq_d),8)),
                                                     datetime.strftime(uniq_d,'%Y/%m/%d'),
                                                            str(vsd[p]['height'][ind]),
                                                            str(np.std(vs[p]['height'][day_ind])),
@@ -654,7 +655,7 @@ def write_wse_files(vsd, vs, selection=None, vs_to_write=None, folder='Time_Seri
             #                    filth = np.where((vsd[p]['height'][day_ind] > (math.floor(mean_h)-2*std_h)) &
             #                                     (vsd[p]['height'][day_ind] < (math.ceil(mean_h)+2*std_h)))[0]
     
-                                outfile.writelines((',').join([str(round(year_fraction(uniq_d),8)),
+                                outfile.writelines((',').join([str(round(s3_utils.year_fraction(uniq_d),8)),
                                     datetime.strftime(uniq_d,'%Y/%m/%d'),
                                            str(vsd[p]['height'][ind]),
                                            str(np.std(vs[p]['height'][day_ind])),

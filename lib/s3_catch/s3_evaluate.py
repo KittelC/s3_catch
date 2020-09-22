@@ -16,8 +16,7 @@ import netCDF4
 from osgeo import gdal
 import geopandas as gpd
 
-from s3_utils import dist_meters, create_vs, count_peaks, create_outliers, wm_outliers, outlier_filter, prep_vsd, year_fraction, l1b_filter
-
+import s3_catch
 
 def sort_l2(vs, outliers, vsd, oltc=False, oltc_date=datetime(2019,3,1).date(),
             vs3=None, outliers3=None, vsd3=None):
@@ -93,15 +92,15 @@ def sort_l2(vs, outliers, vsd, oltc=False, oltc_date=datetime(2019,3,1).date(),
 
 def sort_l1b(vsd, mostdata, windext, postoltc, ext=None, oltc=None):
     
-    spa, npa, ppa, mpa = l1b_filter(vsd, mostdata)
+    spa, npa, ppa, mpa = s3_utils.l1b_filter(vsd, mostdata)
     s3_valid = npa
     if ext:
-        spa3, npa3, ppa3, mpa3 = l1b_filter(ext, windext)
+        spa3, npa3, ppa3, mpa3 = s3_utils.l1b_filter(ext, windext)
         s3_valid_3 = npa3
     else:
         s3_valid_3 = []
     if oltc:
-        spao, npao, ppao, mpao = l1b_filter(vsd, postoltc)
+        spao, npao, ppao, mpao = s3_utils.l1b_filter(vsd, postoltc)
         s3_valid_o = npao
     else:
         s3_valid_o = []
