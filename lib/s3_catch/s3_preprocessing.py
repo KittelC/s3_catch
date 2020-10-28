@@ -92,7 +92,7 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
     start = datetime.now()
     for f in os.listdir(s3_folder):
         s3_file = os.path.join(s3_folder, f)
-        if s3_file.endswith('.nc'):
+        if s3_file.endswith('NT_003.nc') or s3_file.endswith('NT_004.nc') and f.split('_')[8][:6] < '202002':
             nc = netCDF4.Dataset(s3_file)
             for p in zip(vs_coords['xcoord'], vs_coords['ycoord']):
                 (x, y) = p
@@ -117,7 +117,8 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
                         geoid = np.interp(nc.variables[lat][:].filled(), lat_01, geoid_01)
                         if lat_01[0] > lat_01[1]:
                             geoid = np.interp(nc.variables[lat][:].filled(),
-                                              np.flip(lat_01), np.flip(geoid_01)) #np.interp sorts to ascending values - if descending, this will have to be corrected.
+                                              np.flip(lat_01), np.flip(geoid_01)) 
+                            #np.interp sorts to ascending values - if descending, this will have to be corrected.
                         # Get retracked WSE 
                         height = (nc[elev][:].filled() - geoid)[selected]
                         src_ds=gdal.Open(dem_file) 
@@ -206,7 +207,8 @@ def read_s3_nc(s3_folder, vs_coords, wm_folder, source,
                                 filetracker[p][root] = np.concatenate([filetracker[p][root],
                                                                        nc.variables['Meas_Index_20Hz'][selected][dem_filter][~np.isnan(mask)].filled()])
                         if source == 'SciHub':
-                            vs[p]['sat_path'] = np.concatenate([vs[p]['sat_path'], np.repeat('descending' if nc.getncattr('first_meas_lat')-nc.getncattr('last_meas_lat')<0 else 'ascending',
+                            vs[p]['sat_path'] = np.concatenate([vs[p]['sat_path'], np.repeat('descending' if 
+                                                    nc.getncattr('first_meas_lat')-nc.getncattr('last_meas_lat') > 0 else 'ascending',
                                  len(dem[dem_filter][~np.isnan(mask)]))])
                             vs[p]['pass'] = np.concatenate([vs[p]['pass'], np.repeat(nc.getncattr('pass_number'),
                                  len(dem[dem_filter][~np.isnan(mask)]))])

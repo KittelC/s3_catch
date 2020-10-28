@@ -9,6 +9,7 @@ from s3_catch import s3_utils, crop_raster, s3_subset_ncdf, s3_preprocessing
 from s3_catch import s3_evaluate
 import geopandas as gpd
 import os
+from datetime import datetime, timedelta
 
 if __name__ == '__main__':
     
@@ -22,7 +23,7 @@ if __name__ == '__main__':
     
     # First preliminary step: Exctract water mask subsets
     # Define your raster for the entire AOI
-    full_raster = r'C:\users\ceki\Downloads\occurrence_zambezi.tif'
+    full_raster = r'D:\OneDrive\Sentinel_3_GPOD\occurrence_zambezi.tif'
     # where to save the subsets
     dest_folder = r'C:\test\Water_Mask'
     if not os.path.exists(dest_folder):
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     extent = [19, -9, 36, -20] #upper left x, upper left y, lower right x, lower right y
   
     # Subset netcdf files:
-    s3_subset_ncdf.subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_measurement.nc')
+    # s3_subset_ncdf.subset_scihub_netcdf(download_dir, dest_dir, extent, file_id=r'enhanced_measurement.nc')
 
         
     # First processing step: 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
     # s3b_folder_g3 = r'..\..\test\GPOD_subset\s3b_3bin'
     
     # SciHub folders:
-    s3a_folder_s = r'C:\test\SciHub_subset\s3a'
+    s3a_folder_s = r'C:\Users\ceki\Desktop\New folder'
     
     # GPOD folders with Level-1b data.
     # s3a_folder_stack = r'..\..\..\test\GPOD_subset\s3a_stacks'
@@ -76,13 +77,16 @@ if __name__ == '__main__':
     
     wm_folder_S3A = r'..\..\test\New_VS_Nature'
     wm_folder_S3B = r'..\..\test\New_VS_Nature'
+
+    s3_folder_S3A = r'D:\OneDrive - Danmarks Tekniske Universitet\Sentinel_3_ESA\Zambezi\S3A\Enh'
+    s3_folder_S3B = r'D:\OneDrive - Danmarks Tekniske Universitet\Sentinel_3_ESA\Zambezi\S3B\Enh'
     
 
     # Second step: Process netcdf files - extracts all data for all VS
     # Returns two dictionaries: 
         # VS - contains the virtual stations in dictionary form
         # outliers - contains information about the removed points for each VS
-    vs_s3a_s, outliers_s3a_s = s3_preprocessing.read_s3_nc(s3a_folder_s, vs_coords=vs_s3a,
+    vs_s3b_s, outliers_s3b_s = s3_preprocessing.read_s3_nc(s3_folder_S3B, vs_coords=vs_s3b,
                                           wm_folder=dest_folder, source='SciHub', 
                                             dem_file=r'C:\test\merit_egm2008.tif',
                                             sigma_thresh=30, dem_thresh=30, vs_buffer=0.015, rip_thresh=1e-13,
@@ -90,7 +94,7 @@ if __name__ == '__main__':
     
     # Third step: Create time series - calculates along-track means to produce
     # daily wSE observations
-    vs_s3a_s_d = s3_preprocessing.create_vs_ts(vs_s3a_s, subset_vs=False, sigma_thresh=30, source='SciHub')
+    vs_s3b_s_d = s3_preprocessing.create_vs_ts(vs_s3b_s, subset_vs=False, sigma_thresh=30, source='SciHub')
     
     
     # Fourth step: Write text files with the observations at each VS
@@ -107,7 +111,7 @@ if __name__ == '__main__':
         # mostdata: at least 80% of expected observations
         # windext: improvement between 2x and 3x extension on GPOD
         # postoltc: improvement after S3A OLTC update
-    mostdata, windext, postoltc = s3_evaluate.sort_l2(vs_s3a_s, outliers_s3a_s, vsd, oltc=False, oltc_date=datetime(2019,3,1).date(),
+    mostdata, windext, postoltc = s3_evaluate.sort_l2(vs_s3a_s, outliers_s3a_s, vs_s3a_s_d, oltc=False, oltc_date=datetime(2019,3,1).date(),
             vs3=None, outliers3=None, vsd3=None)
     # Level-1b evaluation.
         # also divided through total (s3-valid), 3x extension (s3_valid_3)
